@@ -1,4 +1,4 @@
-from rhoa import Station, rho_a
+from Rho.rhoa import Station, rho_a
 import matplotlib.pyplot as plt
 import sys
 
