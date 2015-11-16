@@ -1,31 +1,25 @@
 from station import Station
-from rhoa import rho_a
-from phi import phi
+from defineargs import args, lines
+from plotrhoa import plotrhoa
+from plotphi import plotphi
 import matplotlib.pyplot as plt
 import sys
-
-def plot(x, y, err):
-    plt.errorbar(x, y, yerr=err, fmt='o', color='red', mec='white')
-    plt.semilogx()
-    plt.semilogy()
-    plt.ylim(0.1, 100000)
      
 if (__name__=="__main__"):
-    arq_jformat=sys.argv[1]
-    component=sys.argv[2]
-
     stn=Station()
-    stn.read(arq_jformat)
+    argts = []
+    argts = sys.argv[1:]
 
-    T, rho, rho_err = rho_a(stn.Z[component])
-    plot(T, rho, rho_err)
+    components, files, z = args(argts)
     
-    T, phi, phi_err = phi(stn.Z[component])
-    # plot(T, phi, phi_err)
-    
-    print "> %s %s" % (stn.stationName, component)
-    for j in range(0,len(T)):
-        print "%10.4e %10.4e %10.4e %10.4e %10.4e" % \
-            (T[j], rho[j], rho_err[j],phi[j],phi_err[j])
+    for i in range(len(z)):
+        if z[i] == 'rhoa':
+            plt.subplot(len(z),1,i+1)
+            colors, fmts = lines(components)
+            plotrhoa(files, components, stn, fmts, colors)
+        else:
+            plt.subplot(len(z),1,i+1)
+            colors, fmts = lines(components)
+            plotphi(files, components, stn, fmts, colors)
     
     plt.show()
